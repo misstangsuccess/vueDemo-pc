@@ -1,12 +1,22 @@
 <template>
   <div>
     App组件
-    <h2>修改</h2>
+    <Header />
+    <router-view></router-view>
+    <Footer />
   </div>
 </template>
 
 <script>
-export default {};
+import Header from './components/Header';
+import Footer from './components/Footer';
+export default {
+  name: 'App',
+  components: {
+    Header,
+    Footer,
+  },
+};
 </script>
 
 <style>
