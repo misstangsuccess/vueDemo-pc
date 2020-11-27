@@ -1,9 +1,8 @@
 <template>
   <div>
-    App组件
     <Header />
-    <router-view></router-view>
     <Footer />
+    <router-view></router-view>
   </div>
 </template>
 
