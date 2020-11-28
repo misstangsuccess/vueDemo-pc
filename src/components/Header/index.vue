@@ -26,7 +26,7 @@
     <!--头部第二行 搜索区域-->
     <div class="bottom">
       <h1 class="logo-area">
-        <router-link class="logo" title="尚品汇" to="/home">
+        <router-link class="logo" title="尚品汇" to="/">
           <img src="./imgs/logo.png" alt="" />
         </router-link>
       </h1>
@@ -36,6 +36,7 @@
             type="text"
             id="autocomplete"
             class="input-error input-xxlarge"
+            v-model="searchText"
           />
           <button
             class="sui-btn btn-xlarge btn-danger"
@@ -53,9 +54,28 @@
 <script>
 export default {
   name: 'Header',
+  data() {
+    return {
+      searchText: '',
+    };
+  },
   methods: {
+    /*  search() {
+      const { searchText } = this;
+      const params = searchText ? `/${searchText}` : '';
+      const location = '/search' + params;
+      this.$router.push(location);
+    }, */
     search() {
-      this.$router.push('/search');
+      const { searchText } = this;
+      //编程式导航：原因将来要做搜索功能（要发送请求）
+      const location = {
+        name: 'search',
+      };
+      if (searchText) {
+        location.params = { searchText };
+      }
+      this.$router.push(location);
     },
   },
 };
@@ -122,9 +142,9 @@ export default {
   border: 2px solid #ea4a36;
   float: left;
 }
-/* .search-form input:focus {
+.search-form input:focus {
   outline: none;
-} */
+}
 .search-form button {
   height: 32px;
   width: 68px;
@@ -134,7 +154,7 @@ export default {
   float: left;
   cursor: pointer;
 }
-/* .search-form button:focus {
+.search-form button:focus {
   outline: none;
-} */
+}
 </style>

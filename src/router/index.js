@@ -9,18 +9,26 @@ export default new VueRouter({
   routes: [
     {
       path: "/",
-      component: Home
+      component: Home,
     },
     {
       path: "/login",
-      component: Login
+      component: Login,
+        meta: {
+          isFooterHide: true
+        }
     },
     {
       path: "/register",
-      component: Register
+      component: Register,
+      meta: {
+        isFooterHide: true
+      }
     },
     {
-      path: "/search",
+      name: "search",
+      /* 可传递params参数  ?代表参数可选的*/
+      path: "/search/:searchText?",
       component: Search
     }
   ]
