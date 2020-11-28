@@ -61,21 +61,32 @@ export default {
   },
   methods: {
     /*  search() {
+     //获取搜索数据
       const { searchText } = this;
+      //判断是否加params参数
       const params = searchText ? `/${searchText}` : '';
+      //生成跳转路径
       const location = '/search' + params;
+      //编程式导航:将来要做搜索功能(发送请求)
       this.$router.push(location);
+       编程式导航重复跳转到同一个路径会报错：
+          Uncaught (in promise) NavigationDuplicated: Avoided redundant navigation to current location: "/search".    
     }, */
     search() {
       const { searchText } = this;
       //编程式导航：原因将来要做搜索功能（要发送请求）
       const location = {
-        name: 'search',
+        name: 'search',//使用命名路由
       };
       if (searchText) {
         location.params = { searchText };
       }
-      this.$router.push(location);
+      this.$router.push(location)
+      /* .then(() => {
+        console.log('成功').catch(() => {
+          console.log('err');
+        }); */
+      //});
     },
   },
 };

@@ -2,6 +2,7 @@
   <div>
     <Header />
     <router-view></router-view>
+    <!-- 可设置不是登录或注册时就显示footer组件 -->
     <Footer v-if="$route.path !== '/login' && $route.path !== '/register'" />
     <!--  <Footer v-if="!$route.meta.isFooterHide"></Footer> -->
   <!--    <Footer v-if="isFooterShow"></Footer> -->
