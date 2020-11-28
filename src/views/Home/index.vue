@@ -19,16 +19,15 @@
 </template>
 
 <script>
-import Brand from "./Brand/Brand";
-import Floor from "./Floor/Floor";
-import Like from "./Like/Like";
-import ListContainer from "./ListContainer/ListContainer";
-import Rank from "./Rank/Rank";
-import TodayRecommend from "./TodayRecommend/TodayRecommend";
-import TypeNav from "./TypeNav";
-
+import Brand from './Brand/Brand';
+import Floor from './Floor/Floor';
+import Like from './Like/Like';
+import ListContainer from './ListContainer/ListContainer';
+import Rank from './Rank/Rank';
+import TodayRecommend from './TodayRecommend/TodayRecommend';
+import TypeNav from '@comps/TypeNav';
 export default {
-  name: "Home",
+  name: 'Home',
   components: {
     Brand,
     Floor,

@@ -1,39 +1,43 @@
 <template>
   <div>
     <Header />
+    <!-- 加载显示当前路由组件 -->
     <router-view></router-view>
-    <!-- 可设置不是登录或注册时就显示footer组件 -->
-    <Footer v-if="$route.path !== '/login' && $route.path !== '/register'" />
-    <!--  <Footer v-if="!$route.meta.isFooterHide"></Footer> -->
-  <!--    <Footer v-if="isFooterShow"></Footer> -->
+    <!-- 当不是登录或者注册时就显示 -->
+    <!-- <Footer v-if="isFooterShow" /> -->
+    <!-- <Footer v-if="$route.path !== '/login' && $route.path !== '/register'" /> -->
+    <Footer v-if="!$route.meta.isFooterHide" />
   </div>
 </template>
 
 <script>
-import Header from './components/Header';
-import Footer from './components/Footer';
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+
 export default {
-  name: 'App',
- /*  data() {
-    return {
-      isFooterShow: true,
-    };
-  }, */
- /*    watch: {
-    $route: {
-      handler(newVal) {
-        this.isFooterShow =
-          newVal.path !== '/login' && newVal.path !== '/register';
-      },
-      immediate: true,
-    },
-  }, */
+  name: "App",
+  // data() {
+  //   return {
+  //     isFooterShow: true,
+  //   };
+  // },
   components: {
     Header,
     Footer,
   },
+  // watch: {
+  //   $route: {
+  //     handler(newVal) {
+  //       this.isFooterShow =
+  //         newVal.path !== "/login" && newVal.path !== "/register";
+  //     },
+  //     immediate: true, // 一上来触发
+  //   },
+  // },
 };
 </script>
 
-<style>
+<style lang="less" scoped>
 </style>
+
+
