@@ -1,8 +1,8 @@
 <template>
   <!-- 商品分类导航 -->
   <div class="type-nav">
-    <div class="container">
-      <h2 class="all">全部商品分类</h2>
+    <div class="container" @mouseleave="isSearchShow = false">
+      <h2 class="all" @mouseenter="isSearchShow = true">全部商品分类</h2>
       <nav class="nav">
         <a href="###">服装城</a>
         <a href="###">美妆馆</a>
@@ -13,29 +13,30 @@
         <a href="###">有趣</a>
         <a href="###">秒杀</a>
       </nav>
-      <div class="sort">
-        <div class="all-sort-list2" @click="goSearch">
-          <div
-            class="item bo"
-            v-for="category in categoryList"
-            :key="category.categoryId"
-          >
-            <h3>
-              <!-- 一级商品分类-->
-              <!-- 方式三事件委托 -->
-              <a
-                :data-categoryName="category.categoryName"
-                :data-categoryId="category.categoryId"
-                :data-categoryType="1"
-                >{{ category.categoryName }}</a
-              >
-              <!-- 方式一:router-link -->
-              <!--  <router-link
+      <transition name="search">
+        <div class="sort" v-show="isHomeShow || isSearchShow">
+          <div class="all-sort-list2" @click="goSearch">
+            <div
+              class="item bo"
+              v-for="category in categoryList"
+              :key="category.categoryId"
+            >
+              <h3>
+                <!-- 一级商品分类-->
+                <!-- 方式三事件委托 -->
+                <a
+                  :data-categoryName="category.categoryName"
+                  :data-categoryId="category.categoryId"
+                  :data-categoryType="1"
+                  >{{ category.categoryName }}</a
+                >
+                <!-- 方式一:router-link -->
+                <!--  <router-link
                 :to="`/search?categoryName=${category.categoryName}&category1Id=${category.categoryId}`"
                 >{{ category.categoryName }}</router-link
               > -->
-              <!--  方式二编程式导航-->
-              <!--    <a
+                <!--  方式二编程式导航-->
+                <!--    <a
                 @click.prevent="
                   $router.push({
                     name: 'search',
@@ -47,30 +48,30 @@
                 "
                 >{{ category.categoryName }}</a
               > -->
-            </h3>
-            <div class="item-list clearfix">
-              <div class="subitem">
-                <dl
-                  class="fore"
-                  v-for="child in category.categoryChild"
-                  :key="child.categoryId"
-                >
-                  <dt>
-                    <!-- 二级商品分类 -->
-                    <!-- 方式一:router-link -->
-                    <!--   <router-link
+              </h3>
+              <div class="item-list clearfix">
+                <div class="subitem">
+                  <dl
+                    class="fore"
+                    v-for="child in category.categoryChild"
+                    :key="child.categoryId"
+                  >
+                    <dt>
+                      <!-- 二级商品分类 -->
+                      <!-- 方式一:router-link -->
+                      <!--   <router-link
                       :to="`/search?categoryName=${categoryChild.categoryName}&category2Id=${categoryChild.categoryId}`"
                       >{{ categoryChild.categoryName }}</router-link
                     > -->
-                    <!-- 方式三事件委托 -->
-                    <a
-                      :data-categoryName="child.categoryName"
-                      :data-categoryId="child.categoryId"
-                      :data-categoryType="2"
-                      >{{ child.categoryName }}</a
-                    >
-                    <!--  方式二编程式导航-->
-                    <!--   <a
+                      <!-- 方式三事件委托 -->
+                      <a
+                        :data-categoryName="child.categoryName"
+                        :data-categoryId="child.categoryId"
+                        :data-categoryType="2"
+                        >{{ child.categoryName }}</a
+                      >
+                      <!--  方式二编程式导航-->
+                      <!--   <a
                       @click.prevent="
                         $router.push({
                           name: 'search',
@@ -82,27 +83,27 @@
                       "
                       >{{ child.categoryName }}</a
                     > -->
-                  </dt>
-                  <dd>
-                    <!-- 三级商品分类 -->
-                    <em
-                      v-for="grandChild in child.categoryChild"
-                      :key="grandChild.categoryId"
-                    >
-                      <!-- 方式一:router-link -->
-                      <!--  <router-link
+                    </dt>
+                    <dd>
+                      <!-- 三级商品分类 -->
+                      <em
+                        v-for="grandChild in child.categoryChild"
+                        :key="grandChild.categoryId"
+                      >
+                        <!-- 方式一:router-link -->
+                        <!--  <router-link
                         :to="`/search?categoryName=${grandChild.categoryName}&category3Id=${grandChild.categoryId}`"
                         >{{ grandChild.categoryName }}</router-link
                       > -->
-                      <!-- 方式三事件委托 -->
-                      <a
-                        :data-categoryName="grandChild.categoryName"
-                        :data-categoryId="grandChild.categoryId"
-                        :data-categoryType="3"
-                        >{{ grandChild.categoryName }}</a
-                      >
-                      <!--  方式二编程式导航-->
-                      <!--  <a
+                        <!-- 方式三事件委托 -->
+                        <a
+                          :data-categoryName="grandChild.categoryName"
+                          :data-categoryId="grandChild.categoryId"
+                          :data-categoryType="3"
+                          >{{ grandChild.categoryName }}</a
+                        >
+                        <!--  方式二编程式导航-->
+                        <!--  <a
                         @click.prevent="
                           $router.push({
                             name: 'search',
@@ -114,14 +115,15 @@
                         "
                         >{{ grandChild.categoryName }}</a
                       > -->
-                    </em>
-                  </dd>
-                </dl>
+                      </em>
+                    </dd>
+                  </dl>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -131,11 +133,12 @@
 import { mapState, mapActions } from 'vuex';
 export default {
   name: 'TypeNav',
-  /* data() {
+  data() {
     return {
-      categoryList: [],
+      isHomeShow: this.$route.path === '/',
+      isSearchShow: false,
     };
-  }, */
+  },
   computed: {
     ...mapState({
       categoryList: (state) => state.home.categoryList,
@@ -148,13 +151,28 @@ export default {
       const { categoryname, categoryid, categorytype } = e.target.dataset;
       console.log(e.target);
       if (!categoryname) return;
-      this.$router.push({
+      /* 隐藏分类列表 */
+      this.isSearchShow = false;
+      const location = {
         name: 'search',
         query: {
           categoryName: categoryname,
           [`category${categorytype}Id`]: categoryid,
         },
-      });
+      };
+      /* 判断是否有params参数 */
+      const { searchText } = this.$route.params;
+      if (searchText) {
+        location.params = { searchText };
+      }
+      this.$router.push(location);
+      /*  this.$router.push({
+        name: 'search',
+        query: {
+          categoryName: categoryname,
+          [`category${categorytype}Id`]: categoryid,
+        },
+      }); */
     },
   },
   /*  async mounted() {
@@ -162,6 +180,9 @@ export default {
     this.categoryList = result.slice(0, 16);
   }, */
   mounted() {
+    /* 在请求之前判断vuex有没有数据 */
+    if (this.categoryList.length) return;
+    /* 调用vuex中的action函数 */
     this.getCategoryList();
   },
 };
@@ -207,7 +228,13 @@ export default {
       position: absolute;
       background: #fafafa;
       z-index: 999;
-
+      &.search-enter-active {
+        transition: height 0.5s;
+        overflow: hidden;
+      }
+      &.search-enter {
+        height: 0;
+      }
       .all-sort-list2 {
         .item {
           h3 {

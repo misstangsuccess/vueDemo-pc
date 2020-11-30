@@ -76,12 +76,17 @@ export default {
       const { searchText } = this;
       //编程式导航：原因将来要做搜索功能（要发送请求）
       const location = {
-        name: 'search',//使用命名路由
+        name: 'search', //使用命名路由
       };
       if (searchText) {
         location.params = { searchText };
       }
-      this.$router.push(location)
+      /* 添加query参数 */
+      const { categoryName } = this.$route.query;
+      if (categoryName) {
+        location.query = this.$route.query;
+      }
+      this.$router.push(location);
       /* .then(() => {
         console.log('成功').catch(() => {
           console.log('err');

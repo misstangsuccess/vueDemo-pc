@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
 import Brand from './Brand/Brand';
 import Floor from './Floor/Floor';
 import Like from './Like/Like';
@@ -36,6 +37,17 @@ export default {
     Rank,
     TodayRecommend,
     TypeNav,
+  },
+  computed: {
+    ...mapState({
+      floors: (state) => state.home.floors,
+    }),
+  },
+  methods: {
+    ...mapActions(['getFloors']),
+  },
+  mounted() {
+    this.getFloors();
   },
 };
 </script>
