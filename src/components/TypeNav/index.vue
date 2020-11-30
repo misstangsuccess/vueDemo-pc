@@ -14,7 +14,7 @@
         <a href="###">秒杀</a>
       </nav>
       <div class="sort">
-        <div class="all-sort-list2">
+        <div class="all-sort-list2" @click="goSearch">
           <div
             class="item bo"
             v-for="category in categoryList"
@@ -22,35 +22,98 @@
           >
             <h3>
               <!-- 一级商品分类-->
-              <a href="">{{ category.categoryName }}</a>
+              <!-- 方式三事件委托 -->
+              <a
+                :data-categoryName="category.categoryName"
+                :data-categoryId="category.categoryId"
+                :data-categoryType="1"
+                >{{ category.categoryName }}</a
+              >
+              <!-- 方式一:router-link -->
+              <!--  <router-link
+                :to="`/search?categoryName=${category.categoryName}&category1Id=${category.categoryId}`"
+                >{{ category.categoryName }}</router-link
+              > -->
+              <!--  方式二编程式导航-->
+              <!--    <a
+                @click.prevent="
+                  $router.push({
+                    name: 'search',
+                    query: {
+                      categoryName: category.categoryName,
+                      category1Id: category.categoryId,
+                    },
+                  })
+                "
+                >{{ category.categoryName }}</a
+              > -->
             </h3>
             <div class="item-list clearfix">
               <div class="subitem">
                 <dl
                   class="fore"
-                  v-for="categoryChild in category.categoryChild"
-                  :key="categoryChild.categoryId"
+                  v-for="child in category.categoryChild"
+                  :key="child.categoryId"
                 >
                   <dt>
                     <!-- 二级商品分类 -->
-                    <a href="">{{ categoryChild.categoryName }}</a>
+                    <!-- 方式一:router-link -->
+                    <!--   <router-link
+                      :to="`/search?categoryName=${categoryChild.categoryName}&category2Id=${categoryChild.categoryId}`"
+                      >{{ categoryChild.categoryName }}</router-link
+                    > -->
+                    <!-- 方式三事件委托 -->
+                    <a
+                      :data-categoryName="child.categoryName"
+                      :data-categoryId="child.categoryId"
+                      :data-categoryType="2"
+                      >{{ child.categoryName }}</a
+                    >
+                    <!--  方式二编程式导航-->
+                    <!--   <a
+                      @click.prevent="
+                        $router.push({
+                          name: 'search',
+                          query: {
+                            categoryName: child.categoryName,
+                            category2Id: child.categoryId,
+                          },
+                        })
+                      "
+                      >{{ child.categoryName }}</a
+                    > -->
                   </dt>
                   <dd>
                     <!-- 三级商品分类 -->
                     <em
-                      v-for="grandChild in categoryChild.categoryChild"
+                      v-for="grandChild in child.categoryChild"
                       :key="grandChild.categoryId"
                     >
-                      <a href="">{{ grandChild.categoryName }}</a>
-                    </em>
-                    <em>
-                      <a href="">文学</a>
-                    </em>
-                    <em>
-                      <a href="">经管</a>
-                    </em>
-                    <em>
-                      <a href="">畅读VIP</a>
+                      <!-- 方式一:router-link -->
+                      <!--  <router-link
+                        :to="`/search?categoryName=${grandChild.categoryName}&category3Id=${grandChild.categoryId}`"
+                        >{{ grandChild.categoryName }}</router-link
+                      > -->
+                      <!-- 方式三事件委托 -->
+                      <a
+                        :data-categoryName="grandChild.categoryName"
+                        :data-categoryId="grandChild.categoryId"
+                        :data-categoryType="3"
+                        >{{ grandChild.categoryName }}</a
+                      >
+                      <!--  方式二编程式导航-->
+                      <!--  <a
+                        @click.prevent="
+                          $router.push({
+                            name: 'search',
+                            query: {
+                              categoryName: grandChild.categoryName,
+                              category3Id: grandChild.categoryId,
+                            },
+                          })
+                        "
+                        >{{ grandChild.categoryName }}</a
+                      > -->
                     </em>
                   </dd>
                 </dl>
@@ -76,10 +139,23 @@ export default {
   computed: {
     ...mapState({
       categoryList: (state) => state.home.categoryList,
+      count: (state) => state.count,
     }),
   },
   methods: {
     ...mapActions(['getCategoryList']),
+    goSearch(e) {
+      const { categoryname, categoryid, categorytype } = e.target.dataset;
+      console.log(e.target);
+      if (!categoryname) return;
+      this.$router.push({
+        name: 'search',
+        query: {
+          categoryName: categoryname,
+          [`category${categorytype}Id`]: categoryid,
+        },
+      });
+    },
   },
   /*  async mounted() {
     const result = await reqCategoryList();
