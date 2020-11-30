@@ -64,17 +64,29 @@
 </template>
 
 <script>
-import { reqCategoryList } from '@api/category';
+/* import { reqCategoryList } from '@api/category'; */
+import { mapState, mapActions } from 'vuex';
 export default {
   name: 'TypeNav',
-  data() {
+  /* data() {
     return {
       categoryList: [],
     };
+  }, */
+  computed: {
+    ...mapState({
+      categoryList: (state) => state.home.categoryList,
+    }),
   },
-  async mounted() {
+  methods: {
+    ...mapActions(['getCategoryList']),
+  },
+  /*  async mounted() {
     const result = await reqCategoryList();
     this.categoryList = result.slice(0, 16);
+  }, */
+  mounted() {
+    this.getCategoryList();
   },
 };
 </script>

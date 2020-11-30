@@ -4,23 +4,23 @@
     <!-- 加载显示当前路由组件 -->
     <router-view></router-view>
     <!-- 当不是登录或者注册时就显示 -->
-    <!-- <Footer v-if="isFooterShow" /> -->
+   <!--  <Footer v-if="isFooterShow" /> -->
     <!-- <Footer v-if="$route.path !== '/login' && $route.path !== '/register'" /> -->
     <Footer v-if="!$route.meta.isFooterHide" />
   </div>
 </template>
 
 <script>
-import Header from "./components/Header";
+import Header from "@comps/Header";
 import Footer from "./components/Footer";
 
 export default {
   name: "App",
-  // data() {
+ /*  // data() {
   //   return {
   //     isFooterShow: true,
   //   };
-  // },
+  // }, */
   components: {
     Header,
     Footer,
