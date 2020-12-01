@@ -9,6 +9,7 @@ export default {
   actions: {
     /* 获取三级分类数据 */
     async getCategoryList ({ commit }) {
+      //console.log("actinos");
       /* 发送请求 */
       const categoryList = await reqCategoryList();
       /* 触发mutations函数 */
@@ -16,6 +17,7 @@ export default {
     },
     /* 获取首页轮播图数据 */
     async getBanners ({ commit }) {
+      // console.log("mutations");
       /* 发送请求 */
       const banners = await reqGetBanners();
       /* 触发mutations函数 */

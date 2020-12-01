@@ -13,7 +13,7 @@ var data = Mock.mock({
   /* 随机中文字 */
   title: "@ctitle(1,6)",
   /* 随机英文字体,长度为1-4 */
-  "subTitle|3-5": ["@title(1,4)"],
+  "subTitle|3-5": ["@ctitle(1,4)"],
   "carouceList|4": [
    "@image('200x100', '@color', '#FFF', 'png', '@cname')"
  ]

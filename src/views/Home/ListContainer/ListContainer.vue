@@ -2,32 +2,25 @@
   <div class="list-container">
     <div class="sortList clearfix">
       <div class="center">
+        <Carousel :carouselList="banners" />
         <!--banner轮播-->
-        <div class="swiper-container" id="mySwiper">
+        <!--   <div class="swiper-container" id="mySwiper">
           <div class="swiper-wrapper">
-            <div class="swiper-slide">
-              <!--  v-for="banner in banners"
-              :key="banner.id" -->
-              <img src="./images/banner1.jpg" />
-              <!-- <img {{banner}}/> -->
+            <div
+              class="swiper-slide"
+              v-for="banner in banners"
+              :key="banner.id"
+            >
+              <img :src="banner.imgUrl" />
             </div>
-            <!-- <div class="swiper-slide">
-              <img src="./images/banner2.jpg" />
-            </div>
-            <div class="swiper-slide">
-              <img src="./images/banner3.jpg" />
-            </div>
-            <div class="swiper-slide">
-              <img src="./images/banner4.jpg" />
-            </div> -->
-          </div>
-          <!-- 如果需要分页器 -->
-          <div class="swiper-pagination"></div>
+          </div> -->
+        <!-- 如果需要分页器  -->
+        <!--  <div class="swiper-pagination"></div> -->
 
-          <!-- 如果需要导航按钮 -->
-          <div class="swiper-button-prev"></div>
-          <div class="swiper-button-next"></div>
-        </div>
+        <!-- 如果需要导航按钮 -->
+        <!--   <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div> -->
+        <!--  </div>  -->
       </div>
       <div class="right">
         <div class="news">
@@ -104,6 +97,11 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
+import Carousel from '../../../components/Carousel';
+// import Swiper, { Navigation, Pagination, Autoplay } from 'swiper';
+// import 'swiper/swiper-bundle.min.css';
+// //swiper6要使用其他功能需要引入才能使用
+// Swiper.use([Navigation, Pagination, Autoplay]);
 export default {
   name: 'ListContainer',
   computed: {
@@ -114,8 +112,46 @@ export default {
   methods: {
     ...mapActions(['getBanners']),
   },
-  mounted() {
-    this.getBanners();
+  async mounted() {
+    //await会等待vuex将数据更新完毕，再执行后面代码
+    await this.getBanners();
+    // console.log('mounted', this.getBanners);
+    //等当前用户界面更新完毕，在触发其中的回调函数
+    //this.$nextTick(() => {
+    //为dom结构生成了才new
+    //   new Swiper('.swiper-container', {
+    //     autoplay: {
+    //       delay: 2000,
+    //       disableOnInteraction: false,
+    //     },
+    //     //先更新用户界面才会有dom结构
+    //     loop: true,
+    //     pagination: {
+    //       el: '.swiper-pagination',
+    //       clickable: true,
+    //     },
+    //     navigation: {
+    //       nextEl: '.swiper-button-next',
+    //       prevEl: '.swiper-button-prev',
+    //     },
+    //   });
+    //});
+
+    //    setTimeout(() => {
+    //     new Swiper('.swiper-container', {
+    //       loop: true,
+    //       pagination: {
+    //         el: '.swiper-pagination',
+    //       },
+    //       navigation: {
+    //         nextEl: '.swiper-button-next',
+    //         prevEl: '.swiper-button-prev',
+    //       },
+    //     });
+    //   }, 1000);
+  },
+  components: {
+    Carousel,
   },
 };
 </script>

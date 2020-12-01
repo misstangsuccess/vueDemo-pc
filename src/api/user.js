@@ -1,7 +1,7 @@
 import request from "@utils/request"
 export const reqLogin = function (phone, password) {
   return request({
-    method: "Post",
+    method: "POST",
     url: '/user/passport/login',
     data: {
       phone, password

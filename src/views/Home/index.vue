@@ -10,9 +10,7 @@
     <!-- 猜你喜欢 -->
     <Like />
     <!--楼层-->
-    <Floor />
-    <!--楼层-->
-    <Floor />
+    <Floor v-for="floor in floors" :key="floor.id" :floor="floor" />
     <!--商标-->
     <Brand />
   </div>
@@ -29,15 +27,6 @@ import TodayRecommend from './TodayRecommend/TodayRecommend';
 import TypeNav from '@comps/TypeNav';
 export default {
   name: 'Home',
-  components: {
-    Brand,
-    Floor,
-    Like,
-    ListContainer,
-    Rank,
-    TodayRecommend,
-    TypeNav,
-  },
   computed: {
     ...mapState({
       floors: (state) => state.home.floors,
@@ -48,6 +37,15 @@ export default {
   },
   mounted() {
     this.getFloors();
+  },
+  components: {
+    Brand,
+    Floor,
+    Like,
+    ListContainer,
+    Rank,
+    TodayRecommend,
+    TypeNav,
   },
 };
 </script>
