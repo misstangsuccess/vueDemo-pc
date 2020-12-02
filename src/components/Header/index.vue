@@ -86,13 +86,24 @@ export default {
       if (categoryName) {
         location.query = this.$route.query;
       }
-      this.$router.push(location);
+      /* if(this.$route.path.indexOf('/search')>-1) */
+      if (this.$route.name === 'search') {
+        this.$router.replace(location);
+      } else {
+        this.$router.push(location);
+      }
+      // this.$router.push(location);
       /* .then(() => {
         console.log('成功').catch(() => {
           console.log('err');
         }); */
       //});
     },
+  },
+  mounted() {
+    this.$bus.$on('clearKeyword', () => {
+      this.searchText = '';
+    });
   },
 };
 </script>

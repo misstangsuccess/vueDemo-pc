@@ -12,10 +12,16 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x">手机</li>
-            <li class="with-x">iphone<i>×</i></li>
-            <li class="with-x">华为<i>×</i></li>
-            <li class="with-x">OPPO<i>×</i></li>
+            <li class="with-x" v-show="options.keyword" @click="delKeyword">
+              {{ options.keyword }}<i>×</i>
+            </li>
+            <li
+              class="with-x"
+              v-show="options.categoryName"
+              @click="delCategory"
+            >
+              {{ options.categoryName }}<i>×</i>
+            </li>
           </ul>
         </div>
 
@@ -132,14 +138,90 @@ import SearchSelector from './SearchSelector/SearchSelector';
 import TypeNav from '@comps/TypeNav';
 export default {
   name: 'Search',
+  data() {
+    return {
+      /* 初始化数据 */
+      options: {
+        category1Id: '', //分类列表
+        category2Id: '',
+        category3Id: '',
+        categoryName: '', //分类名称
+        keyword: '', //搜索关键字
+        order: '', //排序
+        pageNo: 1, //第1页
+        pageSize: 10, //显示数量
+        props: [], //商品属性
+        trademark: '', //品牌
+      },
+    };
+  },
   computed: {
     ...mapGetters(['goodsList']),
   },
+  watch: {
+    /* 监视地址的变化 */
+    $route() {
+      // console.log(to, from);
+      this.updateProductList();
+    },
+    /* $route: {
+      handler() {
+        this.updateProductList();
+      },
+      immediate: true,
+    }, */
+  },
   methods: {
     ...mapActions(['getProductList']),
+    /* 更新商品列表 */
+    updateProductList() {
+      /* 获取params参数,并把searchText命名为keyword */
+      const { searchText: keyword } = this.$route.params;
+      const {
+        categoryName,
+        category1Id,
+        category2Id,
+        category3Id,
+      } = this.$route.query;
+
+      //这里的数据会覆盖上面的数据
+      const options = {
+        ...this.options,
+        keyword,
+        categoryName,
+        category1Id,
+        category2Id,
+        category3Id,
+      };
+      this.options = options;
+      this.getProductList(options);
+    },
+    /* 删除关键字 */
+    delKeyword() {
+      this.options.keyword = '';
+      /* 清空header组件中keyword */
+      this.$bus.$emit('clearKeyword');
+      /* 清除路径params参数,可以直接跳转页面*/
+      this.$router.replace({
+        name: 'search',
+        query: this.$route.query,
+      });
+    },
+    /* 删除分类列表名字 */
+    delCategory() {
+      this.options.categoryName = '';
+      this.options.category1Id = '';
+      this.options.category2Id = '';
+      this.options.category3Id = '';
+      this.$router.replace({
+        name: 'search',
+        params: this.$route.params,
+      });
+    },
   },
   mounted() {
-    this.getProductList();
+    /* 一上来发送请求会携带参数 */
+    this.updateProductList();
   },
   components: {
     SearchSelector,

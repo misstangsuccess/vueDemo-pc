@@ -10,16 +10,16 @@ const replace = VueRouter.prototype.replace;
 VueRouter.prototype.push = function (location, onComplete, onAbrot) {
   //若用户想处理失败,就处理
   if (onComplete, onAbrot) {
-    return push.call(this, location, onAbrot)
+    return push.call(this, location, onComplete, onAbrot)
   }
   /* 若用户不处理失败就给空函数 */
-  return push.call(this, location, () => { })
+  return push.call(this, location, onComplete, () => { })
 }
 VueRouter.prototype.replace = function (location, onComplete, onAbrot) {
   if (onComplete && onAbrot) {
-    return replace.call(this, location, onAbrot)
+    return replace.call(this, location, onComplete, onAbrot)
   }
-  return replace.call(this, onComplete, onAbrot, () => { })
+  return replace.call(this, location, onComplete, onAbrot, () => { })
 }
 
 Vue.use(VueRouter)
