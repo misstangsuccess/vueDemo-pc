@@ -4,6 +4,7 @@ import Home from "../views/Home";
 import Login from "../views/Login";
 import Register from "../views/Register";
 import Search from "../views/Search";
+import Detail from "../views/Detail";
 /* 重写push和replace方法,是为了让编程式导航重复点击时不报错 */
 const push = VueRouter.prototype.push;
 const replace = VueRouter.prototype.replace;
@@ -24,6 +25,7 @@ VueRouter.prototype.replace = function (location, onComplete, onAbrot) {
 
 Vue.use(VueRouter)
 export default new VueRouter({
+  /* 路由配置 */
   routes: [
     {
       path: "/",
@@ -51,6 +53,15 @@ export default new VueRouter({
       /* 可传递params参数  ?代表参数可选的*/
       path: "/search/:searchText?",
       component: Search
+    },
+    {
+      name: "detail",
+      path: "/detail/:id",
+      component: Detail
     }
-  ]
+  ],
+  /* 页面跳转到顶部设置*/
+  scrollBehavior () {
+    return { x: 0, y: 0 }
+  }
 })

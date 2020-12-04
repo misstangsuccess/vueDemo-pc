@@ -44,10 +44,7 @@
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li
-                  :class="{ active: options.order.indexOf('1') > -1 }"
-                  @click="setOrder('1')"
-                >
+                <li :class="{ active: isOrder('1') }" @click="setOrder('1')">
                   <a
                     >综合<i
                       :class="{
@@ -67,10 +64,7 @@
                 <li>
                   <a>评价</a>
                 </li>
-                <li
-                  :class="{ active: options.order.indexOf('2') > -1 }"
-                  @click="setOrder('2')"
-                >
+                <li :class="{ active: isOrder('2') }" @click="setOrder('2')">
                   <a
                     >价格
                     <span>
@@ -78,16 +72,14 @@
                         :class="{
                           iconfont: true,
                           'icon-arrow-up-filling': true,
-                          deactive:
-                            options.order.indexOf('2') > -1 && isPriceDown,
+                          deactive: isOrder('2') && isPriceDown,
                         }"
                       ></i>
                       <i
                         :class="{
                           iconfont: true,
                           'icon-arrow-down-filling': true,
-                          deactive:
-                            options.order.indexOf('2') > -1 && !isPriceDown,
+                          deactive: isOrder('2') && !isPriceDown,
                         }"
                       ></i>
                     </span>
@@ -102,9 +94,9 @@
               <li class="yui3-u-1-5" v-for="goods in goodsList" :key="goods.id">
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="item.html" target="_blank"
+                    <router-link :to="`/detail/${goods.id}`"
                       ><img :src="goods.defaultImg"
-                    /></a>
+                    /></router-link>
                   </div>
                   <div class="price">
                     <strong>
@@ -113,11 +105,10 @@
                     </strong>
                   </div>
                   <div class="attr">
-                    <a
-                      target="_blank"
-                      href="item.html"
+                    <router-link
+                      :to="`/detail/${goods.id}`"
                       title="促销信息，下单即赠送三个月CIBN视频会员卡！【小米电视新品4A 58 火爆预约中】"
-                      >{{ goods.title }}</a
+                      >{{ goods.title }}</router-link
                     >
                   </div>
                   <div class="commit">
@@ -149,7 +140,14 @@
             current-page：当前页数
             pager-count：任意一个就可以达到显示页码的功能
            -->
-          <el-pagination
+          <pagination
+            @current-change="handleCurrentChange"
+            :current-page="options.pageNo"
+            :page-size="5"
+            :pager-count="7"
+            :total="total"
+          />
+          <!--  <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="options.pageNo"
@@ -160,7 +158,7 @@
             layout=" prev,pager,next,total,sizes,jumper"
             :total="total"
           >
-          </el-pagination>
+          </el-pagination> -->
         </div>
       </div>
     </div>
@@ -171,6 +169,7 @@
 import { mapGetters, mapActions } from 'vuex';
 import SearchSelector from './SearchSelector/SearchSelector';
 import TypeNav from '@comps/TypeNav';
+import pagination from '@comps/Pagination';
 export default {
   name: 'Search',
   data() {
@@ -258,6 +257,8 @@ export default {
     },
     /* 添加品牌数据 */
     addTrademark(trademark) {
+      /* 判断是否选过品牌,若有就不发请求了 */
+      if (this.options.trademark) return;
       this.options.trademark = trademark;
       this.updateProductList();
     },
@@ -268,6 +269,8 @@ export default {
     },
     /* 添加品牌属性 */
     addProp(prop) {
+      /* 判断是否选过属性,若有就不发请求了 */
+      if (this.options.props.indexOf(prop) > -1) return;
       this.options.props.push(prop);
       this.updateProductList();
     },
@@ -316,6 +319,10 @@ export default {
       // this.options.pageNo = pageNo;
       this.updateProductList(pageNo);
     },
+    /* 判断order的排序方式 */
+    isOrder(order) {
+      return this.options.order.indexOf(order) > -1;
+    },
   },
   mounted() {
     /* 一上来发送请求会携带参数 */
@@ -324,6 +331,7 @@ export default {
   components: {
     SearchSelector,
     TypeNav,
+    pagination,
   },
 };
 </script>
