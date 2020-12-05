@@ -5,6 +5,8 @@ import Login from "../views/Login";
 import Register from "../views/Register";
 import Search from "../views/Search";
 import Detail from "../views/Detail";
+import ShopCart from "../views/ShopCart";
+import AddCartSuccess from "../views/AddCartSuccess"
 /* 重写push和replace方法,是为了让编程式导航重复点击时不报错 */
 const push = VueRouter.prototype.push;
 const replace = VueRouter.prototype.replace;
@@ -58,7 +60,17 @@ export default new VueRouter({
       name: "detail",
       path: "/detail/:id",
       component: Detail
-    }
+    },
+    {
+      name: "shopCart",
+      path: "/shopCart",
+      component: ShopCart
+    },
+    {
+      name: "AddCartSuccess",
+      path: "/addCartSuccess",
+      component:AddCartSuccess
+    },
   ],
   /* 页面跳转到顶部设置*/
   scrollBehavior () {

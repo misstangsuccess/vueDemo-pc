@@ -1,16 +1,8 @@
 <template>
-  <div class="swiper-container">
+  <div class="swiper-container" ref="swiper">
     <div class="swiper-wrapper">
-      <div
-        class="swiper-slide"
-        v-for="(skuImage, index) in skuImageList"
-        :key="skuImage.id"
-      >
-        <img
-          :src="skuImage.imgUrl"
-          :class="{ active: currentIndex === index }"
-          @click="changeCurrentIndex(index)"
-        />
+      <div class="swiper-slide" v-for="(skuImage,index) in skuImageList" :key="skuImage.id">
+        <img :src="skuImage.imgUrl" @click="updateCurrentImgIndex(index)" />
       </div>
     </div>
     <div class="swiper-button-next"></div>
@@ -19,44 +11,33 @@
 </template>
 
 <script>
-import Swiper, { Navigation, Pagination, Autoplay } from 'swiper';
-import 'swiper/swiper-bundle.min.css';
-import { mapGetters } from 'vuex';
+import Swiper, { Navigation } from 'swiper';
 //swiper6要使用其他功能需要引入才能使用
-Swiper.use([Navigation, Pagination, Autoplay]);
+Swiper.use([Navigation]);
 export default {
   name: 'ImageList',
-  data() {
-    return {
-      currentIndex: 0,
-    };
-  },
-  computed: {
-    ...mapGetters(['skuImageList']),
+  props: {
+    skuImageList: Array,
+    updateCurrentImgIndex: Function,
   },
   watch: {
-    initSwiper() {
-      this.swiper = new Swiper(this.$refs.swiper, {
-        //先更新用户界面才会有dom结构
-        slidesPerView: 5, // 一次显示5页
-        slidesPerGroup: 5, //以5页为单位翻页
-        pagination: {
-          el: '.swiper-pagination',
-          clickable: true,
-        },
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
+    skuImageList() {
+      //一旦触发说明值发生了变化,此时就有数据了,等数据回来了,渲染完成DOM元素
+     /*  console.log('12', this.skuImageList); */
+      this.$nextTick(() => {
+        //写refs为了避免冲突
+        new Swiper(this.$refs.swiper, {
+          //先更新用户界面才会有dom结构
+          slidesPerView: 5, // 一次显示5页
+          spaceBetween: 30, //每张图片的间距
+          slidesPerGroup: 5, //以5页为单位翻页
+          navigation: {
+            //左右按钮
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
       });
-    },
-    immediate:true,
-  },
-  methods: {
-    
-    changeCurrentIndex(index) {
-      this.currentIndex = index;
-      this.$emit('changeCurrentIndex', index);
     },
   },
 };

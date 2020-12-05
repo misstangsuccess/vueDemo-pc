@@ -1,11 +1,7 @@
 <template>
   <div class="swiper-container" ref="swiper">
     <div class="swiper-wrapper">
-      <div
-        class="swiper-slide"
-        v-for="carousel in carouselList"
-        :key="carousel.id"
-      >
+      <div class="swiper-slide" v-for="carousel in carouselList" :key="carousel.id">
         <img :src="carousel.imgUrl" />
       </div>
     </div>
@@ -20,7 +16,6 @@
 
 <script>
 import Swiper, { Navigation, Pagination, Autoplay } from 'swiper';
-import 'swiper/swiper-bundle.min.css';
 //swiper6要使用其他功能需要引入才能使用
 Swiper.use([Navigation, Pagination, Autoplay]);
 export default {
@@ -40,9 +35,9 @@ export default {
       // this.$nextTick为了确保轮播图数据已经渲染成DOM元素
       /* 确保swiper不能new多次 */
       if (this.swiper) return;
-      console.log(this.initSwiper);
+      // console.log(this.initSwiper);
       this.$nextTick(() => {
-        console.log(111, this.initSwiper);
+        // console.log(111, this.initSwiper);
         this.initSwiper();
       });
     },

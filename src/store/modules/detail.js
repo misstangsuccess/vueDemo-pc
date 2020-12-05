@@ -5,8 +5,11 @@ export default {
     productDetail: {
       categoryView: {},
       spuSaleAttrList: [],
-      skuInfo: {},
-      skuImageList: []
+      skuInfo: {
+        //若没有定义数据可在组件中直接做判断
+        skuImageList: []
+      },
+
     }
   },
   /* 为了组件中方便使用数据 */
@@ -20,9 +23,9 @@ export default {
     skuInfo (state) {
       return state.productDetail.skuInfo
     },
-    skuImageList (state) {
-      return state.productDetail.skuImageList
-    }
+    /*    skuImageList (state) {
+         return state.productDetail.skuImageList
+       } */
   },
   actions: {
     async getProductDetail ({ commit }, id) {

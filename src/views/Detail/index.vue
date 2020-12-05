@@ -16,24 +16,45 @@
         <!-- 左侧放大镜区域 -->
         <div class="previewWrap">
           <!--放大镜效果-->
-          <Zoom />
+          <!-- 方式一:不声明数据时使用 -->
+          <!--   <Zoom
+          :imgUrl="skuInfo.skuImageList && skuInfo.skuImageList[currentImgIndex] &&
+          skuInfo.skuImageList[currentImgIndex].imgUrl"
+          :bigImgUrl="
+          skuInfo.skuImageList&&
+          skuInfo.skuImageList[currentImgIndex]&&
+          skuInfo.skuImageList[currentImgIndex].imgUrl"
+          />-->
+          <!-- es11语法 可选链
+          <Zoom :imgUrl="skuInfo.skuImageList?.[currentImgIndex].imgUrl"
+          :bigImgUrl="skuInfo.skuImageList?.[currentImgIndex].imgUrl"
+          -->
+          <!-- 方式二:vuex中声明数据 -->
+          <Zoom
+            :imgUrl="
+              skuInfo.skuImageList[currentImgIndex] &&
+              skuInfo.skuImageList[currentImgIndex].imgUrl
+            "
+            :bigImgUrl="
+              skuInfo.skuImageList[currentImgIndex] &&
+              skuInfo.skuImageList[currentImgIndex].imgUrl
+            "
+          />
           <!-- 小图列表 -->
-          <ImageList @changeCurrentIndex="changeCurrentIndex" />
+          <!-- <ImageList /> -->
+          <ImageList
+            :skuImageList="skuInfo.skuImageList"
+            :updateCurrentImgIndex="updateCurrentImgIndex"
+          />
         </div>
         <!-- 右侧选择区域布局 -->
         <div class="InfoWrap">
           <div class="goodsDetail">
-            <h3 class="InfoName">
-              {{ skuInfo.skuName }}
-            </h3>
-            <p class="news">
-              {{ skuInfo.skuDesc }}
-            </p>
+            <h3 class="InfoName">{{ skuInfo.skuName }}</h3>
+            <p class="news">{{ skuInfo.skuDesc }}</p>
             <div class="priceArea">
               <div class="priceArea1">
-                <div class="title">
-                  价&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;格
-                </div>
+                <div class="title">价&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;格</div>
                 <div class="price">
                   <i>¥</i>
                   <em>{{ skuInfo.price }}</em>
@@ -50,20 +71,16 @@
                 </div>
                 <div class="fixWidth">
                   <i class="red-bg">加价购</i>
-                  <em class="t-gray"
-                    >满999.00另加20.00元，或满1999.00另加30.00元，或满2999.00另加40.00元，即可在购物车换购热销商品</em
-                  >
+                  <em
+                    class="t-gray"
+                  >满999.00另加20.00元，或满1999.00另加30.00元，或满2999.00另加40.00元，即可在购物车换购热销商品</em>
                 </div>
               </div>
             </div>
             <div class="support">
               <div class="supportArea">
-                <div class="title">
-                  支&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;持
-                </div>
-                <div class="fixWidth">
-                  以旧换新，闲置手机回收 4G套餐超值抢 礼品购
-                </div>
+                <div class="title">支&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;持</div>
+                <div class="fixWidth">以旧换新，闲置手机回收 4G套餐超值抢 礼品购</div>
               </div>
               <div class="supportArea">
                 <div class="title">配 送 至</div>
@@ -82,19 +99,24 @@
                   class="active"
                   v-for="spuSaleAttrValue in spuSaleAttr.spuSaleAttrValueList"
                   :key="spuSaleAttrValue.id"
-                >
-                  {{ spuSaleAttrValue.saleAttrValueName }}
-                </dd>
+                >{{ spuSaleAttrValue.saleAttrValueName }}</dd>
+                <!--  @click="selectValue(value, attr.spuSaleAttrValueList -->
               </dl>
             </div>
             <div class="cartWrap">
               <div class="controls">
-                <input autocomplete="off" class="itxt" />
+                <el-input-number
+                  v-model="skuNum"
+                  controls-position="right"
+                  :min="1"
+                  :max="100"
+                ></el-input-number>
+                <!--    <input autocomplete="off" class="itxt" />
                 <a href="javascript:" class="plus">+</a>
-                <a href="javascript:" class="mins">-</a>
+                <a href="javascript:" class="mins">-</a>-->
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <a href="javascript:" @click="addCart">加入购物车</a>
               </div>
             </div>
           </div>
@@ -274,19 +296,19 @@
         <div class="intro">
           <ul class="tab-wraped">
             <li class="active">
-              <a href="###"> 商品介绍 </a>
+              <a href="###">商品介绍</a>
             </li>
             <li>
-              <a href="###"> 规格与包装 </a>
+              <a href="###">规格与包装</a>
             </li>
             <li>
-              <a href="###"> 售后保障 </a>
+              <a href="###">售后保障</a>
             </li>
             <li>
-              <a href="###"> 商品评价 </a>
+              <a href="###">商品评价</a>
             </li>
             <li>
-              <a href="###"> 手机社区 </a>
+              <a href="###">手机社区</a>
             </li>
           </ul>
           <div class="tab-content">
@@ -340,25 +362,56 @@ import Zoom from './Zoom/Zoom';
 
 export default {
   name: 'Detail',
-  data(){
-    return{
-      currentIndex:0
-    }
+  data() {
+    return {
+      //当前选中的下标
+      currentImgIndex: 0,
+      skuNum: 1,
+    };
   },
   computed: {
     ...mapGetters(['categoryView', 'spuSaleAttrList', 'skuInfo']),
   },
+
   methods: {
-    ...mapActions(['getProductDetail']),
+    ...mapActions(['getProductDetail', 'getUpdateCart']),
+    //更新当前图片的下标
+    updateCurrentImgIndex(index) {
+      this.currentImgIndex = index;
+    },
+    //添加购物车功能
+    async addCart() {
+      /* 发请求加入购物车 */
+      /* try...catch获取失败actions函数必须返回promise对象,才会等它执行 */
+      try {
+        await this.getUpdateCart({
+          skuId: this.skuInfo.id,
+          skuNum: this.skuNum,
+        });
+        //一旦加入购物车跳转页面
+        this.$router.push(`/addCartsuccess?skuNum=${this.skuNum}`);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    /*  selectValue(value, valueList) {
+      // 如果当前项没有选中才处理
+      if (value.isChecked !== '1') {
+        // 将所有的项都先指定为不选择
+        valueList.forEach((val) => (val.isChecked = '0'));
+        // 选中当前的
+        value.isChecked = '1';
+      }
+    }, */
   },
   mounted() {
     console.log(this.getProductDetail);
     this.getProductDetail(this.$route.params.id);
   },
   components: {
-    ImageList,
-    Zoom,
     TypeNav,
+    Zoom,
+    ImageList,
   },
 };
 </script>
@@ -531,6 +584,9 @@ export default {
               position: relative;
               float: left;
               margin-right: 15px;
+              .input-number {
+                width: 150px;
+              }
 
               .itxt {
                 width: 38px;
@@ -568,6 +624,7 @@ export default {
 
             .add {
               float: left;
+              margin-left: 150px;
 
               a {
                 background-color: #e1251b;
