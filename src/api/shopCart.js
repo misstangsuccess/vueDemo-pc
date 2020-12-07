@@ -11,10 +11,10 @@ export const reqGetUpdateCart = function (skuId, skuNum) {
     url: `/cart/addToCart/${skuId}/${skuNum}`,
   })
 }
-export const reqGetCheckCart = function (skuID, isChecked) {
+export const reqGetCheckCart = function (skuId, isChecked) {
   return request({
     method: "GET",
-    url: `/cart/checkCart/${skuID}/${isChecked}`,
+    url: `/cart/checkCart/${skuId}/${isChecked}`,
   })
 }
 export const reqGetDeleteCart = function (skuId) {

@@ -5,15 +5,15 @@
       <div class="goods">
         <div class="left-good">
           <div class="left-pic">
-            <img src="good.skuDefaultImg">
+            <img :src="skuInfo.skuDefaultImg">
           </div>
           <div class="right-info">
-            <p class="title">小米红米 Redmi note8 手机 梦幻蓝 全网通(4GB+64GB)</p>
-            <p class="attr">颜色：WFZ5099IH/5L钛金釜内胆 数量：2</p>
+            <p class="title">{{skuInfo.skuName}}</p>
+            <p class="attr">颜色：WFZ5099IH/5L钛金釜内胆 数量：{{$route.query.skuNum}}</p>
           </div>
         </div>
         <div class="right-gocart">
-          <a href="javascript:" class="sui-btn btn-xlarge">查看商品详情</a>
+          <router-link :to="`/detail/${skuInfo.id}`" class="sui-btn btn-xlarge">查看商品详情</router-link>
           <router-link to="/shopCart" >去购物车结算 > </router-link>
         </div>
       </div>
@@ -22,8 +22,12 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex"
   export default {
     name: 'AddCartSuccess',
+    computed:{
+      ...mapGetters(['skuInfo'])
+    }
   }
 </script>
 

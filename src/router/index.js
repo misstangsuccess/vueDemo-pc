@@ -7,6 +7,10 @@ import Search from "../views/Search";
 import Detail from "../views/Detail";
 import ShopCart from "../views/ShopCart";
 import AddCartSuccess from "../views/AddCartSuccess"
+import Trade from "../views/Trade"
+import Center from "../views/Center"
+import Pay from "../views/Pay"
+import PaySuccess from "../views/PaySuccess"
 /* 重写push和replace方法,是为了让编程式导航重复点击时不报错 */
 const push = VueRouter.prototype.push;
 const replace = VueRouter.prototype.replace;
@@ -70,6 +74,26 @@ export default new VueRouter({
       name: "AddCartSuccess",
       path: "/addCartSuccess",
       component:AddCartSuccess
+    },
+    {
+      name: "Trade",
+      path: "/trade",
+      component:Trade
+    },
+    {
+      name: "Center",
+      path: "/center/myorder",
+      component:Center
+    },
+    {
+      name: "Pay",
+      path: "/pay",
+      component:Pay
+    },
+    {
+      name: "PaySuccess",
+      path: "/paysuccess",
+      component:PaySuccess
     },
   ],
   /* 页面跳转到顶部设置*/

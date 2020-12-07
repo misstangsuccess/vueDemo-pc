@@ -15,7 +15,7 @@
         <ul class="cart-list" v-for="cart in cartList" :key="cart.id">
           <li class="cart-list-con1">
             <!--选中就是1,没选中就是0  -->
-            <input type="checkbox" name="chk_list" :checked="cart.isChecked" />
+            <input type="checkbox" name="chk_list" :checked="cart.isChecked==='1'" />
           </li>
           <li class="cart-list-con2">
             <img :src="cart.imgUrl" />
@@ -27,10 +27,29 @@
             <span class="price">{{cart.cartPrice}}</span>
           </li>
           <li class="cart-list-con5">
-            <a href="javascript:void(0)" class="mins" @click="updateAdd(cart.skuId,-1)">-</a>
+            <button
+              class="mins"
+              @click="updateAdd(cart.skuId,-1,cart.skuNum)"
+              :disabled="cart.skuNum===1"
+            >-</button>
             <!-- 商品数量 -->
-            <input autocomplete="off" type="text" :value="cart.skuNum" minnum="1" class="itxt" />
-            <a @click="updateAdd(cart.skuId,1)" href="javascript:void(0)" class="plus">+</a>
+            <input
+              autocomplete="off"
+              type="text"
+              :value="cart.skuNum"
+              minnum="1"
+              class="itxt"
+              @blur="update(cart.skuId,cart.skuNum,$event)"
+              @input="formatSkuNum"
+            />
+            <!-- blur失去焦点时,更新数量,触发event事件 -->
+            <!-- input表单事件不传参,默认是event参数 -->
+            <button
+              @click="updateAdd(cart.skuId,1,cart.skuNum)"
+              class="plus"
+              :disabled="cart.skuNum===10"
+            >+</button>
+            <!-- disabled当按钮加到或减到一定数量时,会禁止加或减,相当于默认就是1或10 -->
           </li>
           <li class="cart-list-con6">
             <!-- 商品总价格 -->
@@ -102,14 +121,57 @@ export default {
 
   methods: {
     ...mapActions(['getShopCart', 'getUpdateCart']),
+    //表单事件格式化
+    formatSkuNum(e) {
+      //正则验证指向的值
+      let skuNum = e.target.value.replace(/\D+/g, '');
+      //判断临界值
+      if (skuNum < 1) {
+        skuNum = 1;
+      } else if (skuNum > 10) {
+        skuNum = 10;
+      }
+      e.target.value = skuNum;
+    },
+
+    //表单失去焦点更新数据发送请求
+    update(skuId, skuNum, e) {
+      if (+e.target.value === skuNum) return;
+      this.getUpdateCart({ skuId, skuNum: e.target.value - skuNum });
+    },
     //更新商品数量
+    /* skuId:商品Id,skuNum:商品增加或减少,count商品数量 */
     async updateAdd(skuId, skuNum) {
+     /*  if(count<=1 && skuNum<0){
+        if(window.confirm("您要删除当前商品吗?")){
+
+        }
+        return
+      }
+      if(count>=100 &&skuNum===1){
+        alert("库存有限")
+        return
+      } */
       //更新商品
       await this.getUpdateCart({ skuId, skuNum });
       //刷新页面,
       //手动更新页面方法就不需要发请求了
       // await this.getShopCart();
     },
+    //选中商品
+    // async checkCart(cart) {
+    //   const skuId = cart.skuId;
+    //   const isChecked = cart.isChecked === 1 ? '0' : '1';
+    //   try {
+    //     await this.getCheckCart({
+    //       skuId,
+    //       isChecked,
+    //     });
+    //     await this.getShopCart();
+    //   } catch (error) {
+    //     alert(error);
+    //   }
+    // },
   },
   mounted() {
     //一上来发送请求
@@ -117,7 +179,6 @@ export default {
   },
 };
 </script>
-
 <style lang="less" scoped>
 .cart {
   width: 1200px;
@@ -141,7 +202,7 @@ export default {
       }
 
       .cart-th1 {
-        width: 20%;
+        width: 10%;
 
         input {
           vertical-align: middle;
@@ -160,7 +221,7 @@ export default {
       .cart-th4,
       .cart-th5,
       .cart-th6 {
-        width: 12.5%;
+        width: 17.5%;
       }
     }
 
@@ -182,7 +243,7 @@ export default {
         }
 
         .cart-list-con2 {
-          width: 35%;
+          width: 25%;
 
           img {
             width: 82px;
@@ -211,7 +272,7 @@ export default {
         }
 
         .cart-list-con5 {
-          width: 15%;
+          width: 20%;
 
           .mins {
             border: 1px solid #ddd;
@@ -252,7 +313,7 @@ export default {
         }
 
         .cart-list-con7 {
-          width: 15%;
+          width: 5%;
 
           a {
             color: #666;

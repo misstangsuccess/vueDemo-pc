@@ -96,9 +96,10 @@
                 <dt class="title">{{ spuSaleAttr.saleAttrName }}</dt>
                 <dd
                   changepirce="0"
-                  class="active"
+                  :class="{active:spuSaleAttrValue.isChecked==='1'}"
                   v-for="spuSaleAttrValue in spuSaleAttr.spuSaleAttrValueList"
                   :key="spuSaleAttrValue.id"
+                  @click="checkSaleAttrValue(spuSaleAttrValue,spuSaleAttr.spuSaleAttrValueList)"
                 >{{ spuSaleAttrValue.saleAttrValueName }}</dd>
                 <!--  @click="selectValue(value, attr.spuSaleAttrValueList -->
               </dl>
@@ -394,15 +395,12 @@ export default {
         console.log(err);
       }
     },
-    /*  selectValue(value, valueList) {
-      // 如果当前项没有选中才处理
-      if (value.isChecked !== '1') {
-        // 将所有的项都先指定为不选择
-        valueList.forEach((val) => (val.isChecked = '0'));
-        // 选中当前的
-        value.isChecked = '1';
-      }
-    }, */
+    //选中指定的属性
+    checkSaleAttrValue(value,valueList){
+      if(value.isChecked==='1')return
+      valueList.forEach(value=>value.isChecked='0')
+      value.isChecked='1'
+    }
   },
   mounted() {
     console.log(this.getProductDetail);
