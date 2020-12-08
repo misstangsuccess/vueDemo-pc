@@ -1,5 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+//为了拿到token数据
+import store from "../store";
 import Home from "../views/Home";
 import Login from "../views/Login";
 import Register from "../views/Register";
@@ -30,7 +32,7 @@ VueRouter.prototype.replace = function (location, onComplete, onAbrot) {
 }
 
 Vue.use(VueRouter)
-export default new VueRouter({
+const router = new VueRouter({
   /* 路由配置 */
   routes: [
     {
@@ -73,27 +75,36 @@ export default new VueRouter({
     {
       name: "AddCartSuccess",
       path: "/addCartSuccess",
-      component:AddCartSuccess
+      component: AddCartSuccess,
+      //路由独享守卫
+     /*  beforeEnter: (to, from, next) => {
+        //判断路径是否从detail路径跳转过来的并且从内存中获取加入到购物车的数据
+        //若是则可以直接进到加入到购物的页面,否则进入购物车清单页面
+        if (from.name === "detail" && sessionStorage.getItem("cart")) {
+          return next()
+        }
+        next("/shopCart")
+      } */
     },
     {
       name: "Trade",
       path: "/trade",
-      component:Trade
+      component: Trade
     },
     {
       name: "Center",
       path: "/center/myorder",
-      component:Center
+      component: Center
     },
     {
       name: "Pay",
       path: "/pay",
-      component:Pay
+      component: Pay
     },
     {
       name: "PaySuccess",
       path: "/paysuccess",
-      component:PaySuccess
+      component: PaySuccess
     },
   ],
   /* 页面跳转到顶部设置*/
@@ -101,3 +112,22 @@ export default new VueRouter({
     return { x: 0, y: 0 }
   }
 })
+//配置全局路由守卫
+//需要进行权限验证的地址
+//权限验证：
+//如果用户未登录，不允许去 trade pay center 等路由
+const promissionPath = ['/trade', '/pay', '/center']
+router.beforeEach((to, from, next) => {
+  /* to:要去的路由对象
+    from:从哪里来的路由对象(当前路由对象)
+    next:是一个函数：跳转到哪个路由的方法
+    比如：要去to这个路由 next()	
+    要去登录路由 next('/login')  next({path: '/login'})  next({name: 'login'})
+   */
+  if (promissionPath.indexOf(to.path) > -1 && !store.state.user.token) {
+    return next('/login')
+  }
+  console.log(to, from, next);
+  next()
+})
+export default router

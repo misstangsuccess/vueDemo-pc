@@ -139,6 +139,7 @@ export default {
         await this.$store.dispatch('login', { phone, password });
         //登录成功则保存token
         if (this.isAutoLogin) {
+          console.log(this.token, this.name);
           localStorage.setItem('token', this.token);
           localStorage.setItem('name', this.name);
         }

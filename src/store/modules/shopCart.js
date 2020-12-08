@@ -1,7 +1,7 @@
 //search组件的vuex状态
 import {
   reqGetShopCart, reqGetUpdateCart,
- /*  reqGetCheckCart */ /* reqGetDeleteCart */
+  // reqGetCheckCart ,reqGetDeleteCart
 } from "@api/shopCart"
 export default {
   state: {
@@ -30,6 +30,11 @@ export default {
     //   await reqGetCheckCart(skuId, isChecked)
     //   // commit("GET_CHECK_CART",{skuID,isChecked})
     // },
+    //删除商品
+    // async getDeleteCart ({ commit }, skuId) {
+    //   console.log(commit);
+    //   await reqGetDeleteCart(skuId)
+    // }
   },
   mutations: {
     GET_SHOP_CART (state, cartList) {

@@ -134,7 +134,7 @@ export default {
           //$message.error自带红色提示的样式
           this.$message.error('请同意用户协议~');
           return;
-        } 
+        }
         if (password !== rePassword) {
           this.$message.error('两次输入密码不一致');
           return;

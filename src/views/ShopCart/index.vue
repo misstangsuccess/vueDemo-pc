@@ -15,7 +15,11 @@
         <ul class="cart-list" v-for="cart in cartList" :key="cart.id">
           <li class="cart-list-con1">
             <!--选中就是1,没选中就是0  -->
-            <input type="checkbox" name="chk_list" :checked="cart.isChecked==='1'" />
+            <input
+              type="checkbox"
+              name="chk_list"
+              :checked="cart.isChecked==='1'"
+            />
           </li>
           <li class="cart-list-con2">
             <img :src="cart.imgUrl" />
@@ -83,7 +87,7 @@
           <i class="summoney">{{totalPrice}}</i>
         </div>
         <div class="sumbtn">
-          <a class="sum-btn" href="###" target="_blank">结算</a>
+          <a class="sum-btn" @click="submit">结算</a>
         </div>
       </div>
     </div>
@@ -142,7 +146,7 @@ export default {
     //更新商品数量
     /* skuId:商品Id,skuNum:商品增加或减少,count商品数量 */
     async updateAdd(skuId, skuNum) {
-     /*  if(count<=1 && skuNum<0){
+      /*  if(count<=1 && skuNum<0){
         if(window.confirm("您要删除当前商品吗?")){
 
         }
@@ -167,11 +171,17 @@ export default {
     //       skuId,
     //       isChecked,
     //     });
-    //     await this.getShopCart();
+    //     await this.$store.dispatch('getCheckCart', { skuId, isChecked });
+    //     // 如果成功了, 重新获取购物车数据显示
+    //     this.getShopCart();
     //   } catch (error) {
     //     alert(error);
     //   }
     // },
+    //点击结算跳转页面
+    submit() {
+      this.$router.push('/trade');
+    },
   },
   mounted() {
     //一上来发送请求

@@ -12,7 +12,9 @@ export default {
       await reqRegister({ phone, password, code })
     },
     async login ({ commit }, { phone, password }) {
+     // console.log(phone, password)
       const user = await reqLogin(phone, password)
+     // console.log(user)
       commit("REQ_LOGIN", user)
     }
   },

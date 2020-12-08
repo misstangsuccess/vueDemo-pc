@@ -8,7 +8,7 @@
           <p v-if="$store.state.user.name">
             <span>{{ $store.state.user.name }}</span>
             &nbsp;
-            <button @click="$router.push('/login')">退出</button>
+            <button>退出</button>
           </p>
           <p v-else>
             <span>请</span>
@@ -59,6 +59,11 @@ export default {
     };
   },
   methods: {
+    //退出登录
+    /*  quit() {
+      this.$router.replace('/');
+      /*  this.$store. */
+    //},
     /*  search() {
      //获取搜索数据
       const { searchText } = this;

@@ -106,18 +106,13 @@
             </div>
             <div class="cartWrap">
               <div class="controls">
-                <el-input-number
-                  v-model="skuNum"
-                  controls-position="right"
-                  :min="1"
-                  :max="100"
-                ></el-input-number>
+                <el-input-number v-model="skuNum" controls-position="right" :min="1" :max="100"></el-input-number>
                 <!--    <input autocomplete="off" class="itxt" />
                 <a href="javascript:" class="plus">+</a>
                 <a href="javascript:" class="mins">-</a>-->
               </div>
-              <div class="add">
-                <a href="javascript:" @click="addCart">加入购物车</a>
+              <div class="add" @click="addCart">
+                <a href="javascript:">加入购物车</a>
               </div>
             </div>
           </div>
@@ -356,7 +351,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions,mapState} from 'vuex';
 import TypeNav from '@comps/TypeNav';
 import ImageList from './ImageList/ImageList';
 import Zoom from './Zoom/Zoom';
@@ -372,6 +367,9 @@ export default {
   },
   computed: {
     ...mapGetters(['categoryView', 'spuSaleAttrList', 'skuInfo']),
+    ...mapState({
+      cartList:(state)=>state.shopCart.cartList
+    })
   },
 
   methods: {
@@ -389,6 +387,7 @@ export default {
           skuId: this.skuInfo.id,
           skuNum: this.skuNum,
         });
+        sessionStorage.setItem("cart",JSON.stringify(this.skuInfo))
         //一旦加入购物车跳转页面
         this.$router.push(`/addCartsuccess?skuNum=${this.skuNum}`);
       } catch (err) {
@@ -396,14 +395,14 @@ export default {
       }
     },
     //选中指定的属性
-    checkSaleAttrValue(value,valueList){
-      if(value.isChecked==='1')return
-      valueList.forEach(value=>value.isChecked='0')
-      value.isChecked='1'
-    }
+    checkSaleAttrValue(value, valueList) {
+      if (value.isChecked === '1') return;
+      valueList.forEach((value) => (value.isChecked = '0'));
+      value.isChecked = '1';
+    },
   },
   mounted() {
-    console.log(this.getProductDetail);
+   // console.log(this.getProductDetail);
     this.getProductDetail(this.$route.params.id);
   },
   components: {
