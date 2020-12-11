@@ -30,7 +30,7 @@
         </ol>
         <h4>
           支付宝账户信息：（很重要，
-          <span class="save">请保存！！！</span>）
+          <span class="save">请保存！！</span>）
         </h4>
         <ul>
           <li>支付帐号：11111111</li>
@@ -161,6 +161,8 @@ export default {
         .catch(() => {
           this.$message.error('支付遇到问题,请重新试试');
         });
+      //跳转页面到订单详情页面
+      this.$router.push('/paysuccess');
     },
   },
 };

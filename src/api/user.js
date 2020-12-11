@@ -18,3 +18,10 @@ export const reqRegister = function ({ phone, password, code }) {
     }
   })
 }
+//退出操作
+export const reqLogout = function () {
+  return request({
+    method: "GET",
+    url: '/user/passport/logout',
+  })
+}

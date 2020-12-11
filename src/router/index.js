@@ -2,7 +2,22 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 //为了拿到token数据
 import store from "../store";
-import Home from "../views/Home";
+// Vue 的异步组件和 Webpack 的代码分割功能,实现路由组件的懒加载。
+//const Foo = () => import(/* webpackChunkName: "group-foo" */ './Foo.vue')
+const Home = () => import(/* webpackChunkName: "Home" */'../views/Home')
+const Login = () => import(/* webpackChunkName: "Login" */'../views/Login')
+const Register = () => import(/* webpackChunkName: "Register" */'../views/Register')
+const Search = () => import(/* webpackChunkName: "Search" */'../views/Search')
+const Detail = () => import(/* webpackChunkName: "Detail" */'../views/Detail')
+const ShopCart = () => import(/* webpackChunkName: "ShopCart" */'../views/ShopCart')
+const AddCartSuccess = () => import(/* webpackChunkName: "AddCartSuccess" */'../views/AddCartSuccess')
+const Trade = () => import(/* webpackChunkName: "Trade" */'../views/Trade')
+const Center = () => import(/* webpackChunkName: "Center" */'../views/Center')
+const Pay = () => import(/* webpackChunkName: "Pay" */'../views/Pay')
+const PaySuccess = () => import(/* webpackChunkName: "PaySuccess" */'../views/PaySuccess')
+const GroupBuy = () => import(/* webpackChunkName: "GroupBuy" */ '../views/Center/GroupBuy')
+const MyOrder = () => import(/* webpackChunkName: "MyOrder" */ '../views/Center/MyOrder')
+/* import Home from "../views/Home";
 import Login from "../views/Login";
 import Register from "../views/Register";
 import Search from "../views/Search";
@@ -12,7 +27,9 @@ import AddCartSuccess from "../views/AddCartSuccess"
 import Trade from "../views/Trade"
 import Center from "../views/Center"
 import Pay from "../views/Pay"
-import PaySuccess from "../views/PaySuccess"
+import PaySuccess from "../views/PaySuccess" */
+// import GroupBuy from "../views/Center/GroupBuy"
+// import MyOrder from "../views/Center/MyOrder"
 /* 重写push和replace方法,是为了让编程式导航重复点击时不报错 */
 const push = VueRouter.prototype.push;
 const replace = VueRouter.prototype.replace;
@@ -33,6 +50,8 @@ VueRouter.prototype.replace = function (location, onComplete, onAbrot) {
 
 Vue.use(VueRouter)
 const router = new VueRouter({
+  //默认模式是hash,但是生产环境中应该改为history
+  mode: "history",
   /* 路由配置 */
   routes: [
     {
@@ -77,14 +96,14 @@ const router = new VueRouter({
       path: "/addCartSuccess",
       component: AddCartSuccess,
       //路由独享守卫
-     /*  beforeEnter: (to, from, next) => {
-        //判断路径是否从detail路径跳转过来的并且从内存中获取加入到购物车的数据
-        //若是则可以直接进到加入到购物的页面,否则进入购物车清单页面
-        if (from.name === "detail" && sessionStorage.getItem("cart")) {
-          return next()
-        }
-        next("/shopCart")
-      } */
+      /*  beforeEnter: (to, from, next) => {
+         //判断路径是否从detail路径跳转过来的并且从内存中获取加入到购物车的数据
+         //若是则可以直接进到加入到购物的页面,否则进入购物车清单页面
+         if (from.name === "detail" && sessionStorage.getItem("cart")) {
+           return next()
+         }
+         next("/shopCart")
+       } */
     },
     {
       name: "Trade",
@@ -93,8 +112,23 @@ const router = new VueRouter({
     },
     {
       name: "Center",
-      path: "/center/myorder",
-      component: Center
+      path: "/center",
+      component: Center,
+      children: [
+        {
+          path: "/center/myorder",
+          component: MyOrder
+        },
+        {
+          path: "/center/groupbuy",
+          component: GroupBuy,
+        },
+        //重定向
+       /*  {
+          path: "/center",
+          redirect: "/center/myorder"
+        } */
+      ]
     },
     {
       name: "Pay",

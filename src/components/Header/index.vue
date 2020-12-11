@@ -8,7 +8,7 @@
           <p v-if="$store.state.user.name">
             <span>{{ $store.state.user.name }}</span>
             &nbsp;
-            <button>退出</button>
+            <button @click="quit">退出</button>
           </p>
           <p v-else>
             <span>请</span>
@@ -17,7 +17,7 @@
           </p>
         </div>
         <div class="type-list">
-          <a href="###">我的订单</a>
+          <router-link to="/center">我的订单</router-link>
           <router-link to="/shopCart">我的购物车</router-link>
           <a href="###">我的尚品汇</a>
           <a href="###">尚品汇会员</a>
@@ -60,10 +60,12 @@ export default {
   },
   methods: {
     //退出登录
-    /*  quit() {
-      this.$router.replace('/');
-      /*  this.$store. */
-    //},
+    quit() {
+      if(window.confirm("你确认要退出吗?")){
+        this.$store.dispatch('logout')
+        this.$router.replace("/login")
+      }
+    },
     /*  search() {
      //获取搜索数据
       const { searchText } = this;

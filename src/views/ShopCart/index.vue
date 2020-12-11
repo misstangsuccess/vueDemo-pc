@@ -18,7 +18,8 @@
             <input
               type="checkbox"
               name="chk_list"
-              :checked="cart.isChecked==='1'"
+              :checked="cart.isChecked"
+              @change="checkCart(cart)"
             />
           </li>
           <li class="cart-list-con2">
@@ -31,11 +32,7 @@
             <span class="price">{{cart.cartPrice}}</span>
           </li>
           <li class="cart-list-con5">
-            <button
-              class="mins"
-              @click="updateAdd(cart.skuId,-1,cart.skuNum)"
-              :disabled="cart.skuNum===1"
-            >-</button>
+            <button class="mins" @click="updateAdd(cart,-1)" :disabled="cart.skuNum===1">-</button>
             <!-- 商品数量 -->
             <input
               autocomplete="off"
@@ -43,16 +40,14 @@
               :value="cart.skuNum"
               minnum="1"
               class="itxt"
-              @blur="update(cart.skuId,cart.skuNum,$event)"
               @input="formatSkuNum"
+              @blur="updateAdd(cart,$event.target.value*1-cart.skuNum)"
             />
+            <!-- @blur="update(cart.skuId,cart.skuNum,$event)"
+            @input="formatSkuNum"-->
             <!-- blur失去焦点时,更新数量,触发event事件 -->
             <!-- input表单事件不传参,默认是event参数 -->
-            <button
-              @click="updateAdd(cart.skuId,1,cart.skuNum)"
-              class="plus"
-              :disabled="cart.skuNum===10"
-            >+</button>
+            <button @click="updateAdd(cart,1)" class="plus" :disabled="cart.skuNum===10">+</button>
             <!-- disabled当按钮加到或减到一定数量时,会禁止加或减,相当于默认就是1或10 -->
           </li>
           <li class="cart-list-con6">
@@ -60,7 +55,7 @@
             <span class="sum">{{cart.skuNum*cart.cartPrice}}</span>
           </li>
           <li class="cart-list-con7">
-            <a href="#none" class="sindelet">删除</a>
+            <a href="#none" class="sindelet" @click="deleteCart(cart.skuId)">删除</a>
             <br />
             <a href="#none">移到收藏</a>
           </li>
@@ -69,18 +64,18 @@
     </div>
     <div class="cart-tool">
       <div class="select-all">
-        <input class="chooseAll" type="checkbox" />
+        <input class="chooseAll" type="checkbox" :checked="isCheckeAll" @change="checkCartAll" />
         <span>全选</span>
       </div>
       <div class="option">
-        <a href="#none">删除选中的商品</a>
+        <a href="#none" @click="batchDelCart">删除选中的商品</a>
         <a href="#none">移到我的关注</a>
         <a href="#none">清除下柜商品</a>
       </div>
       <div class="money-box">
         <div class="chosed">
           已选择
-          <span>{{total}}</span>件商品
+          <span>{{totalCount}}</span>件商品
         </div>
         <div class="sumprice">
           <em>总价（不含运费） ：</em>
@@ -95,58 +90,59 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapGetters } from 'vuex';
 export default {
   name: 'ShopCart',
   computed: {
     ...mapState({
       cartList: (state) => state.shopCart.cartList,
     }),
+    ...mapGetters(['selectCart', 'totalCount', 'totalPrice', 'isCheckeAll']),
     //商品总数量
-    total() {
-      return (
-        this.cartList
-          //过滤选择的商品
-          .filter((cart) => cart.isChecked === 1)
-          .reduce((p, c) => {
-            return p + c.skuNum;
-          }, 0)
-      );
-    },
+    // total() {
+    //   return (
+    //     this.cartList
+    //       //过滤选择的商品
+    //       .filter((cart) => cart.isChecked === 1)
+    //       .reduce((p, c) => {
+    //         return p + c.skuNum;
+    //       }, 0)
+    //   );
+    // },
     //商品总价格
-    totalPrice() {
-      return this.cartList
-        .filter((cart) => cart.isChecked === 1)
-        .reduce((p, c) => {
-          return p + c.skuNum * c.skuPrice;
-        }, 0);
-    },
+    // totalPrice() {
+    //   return this.cartList
+    //     .filter((cart) => cart.isChecked === 1)
+    //     .reduce((p, c) => {
+    //       return p + c.skuNum * c.skuPrice;
+    //     }, 0);
+    // },
   },
 
   methods: {
-    ...mapActions(['getShopCart', 'getUpdateCart']),
+    ...mapActions(['getShopCart', 'getUpdateCart', 'getDeleteCart']),
     //表单事件格式化
-    formatSkuNum(e) {
-      //正则验证指向的值
-      let skuNum = e.target.value.replace(/\D+/g, '');
-      //判断临界值
-      if (skuNum < 1) {
-        skuNum = 1;
-      } else if (skuNum > 10) {
-        skuNum = 10;
-      }
-      e.target.value = skuNum;
-    },
+    // formatSkuNum(e) {
+    //   //正则验证指向的值
+    //   let skuNum = e.target.value.replace(/\D+/g, '');
+    //   //判断临界值
+    //   if (skuNum < 1) {
+    //     skuNum = 1;
+    //   } else if (skuNum > 10) {
+    //     skuNum = 10;
+    //   }
+    //   e.target.value = skuNum;
+    // },
 
     //表单失去焦点更新数据发送请求
-    update(skuId, skuNum, e) {
-      if (+e.target.value === skuNum) return;
-      this.getUpdateCart({ skuId, skuNum: e.target.value - skuNum });
-    },
+    // update(skuId, skuNum, e) {
+    //   if (+e.target.value === skuNum) return;
+    //   this.getUpdateCart({ skuId, skuNum: e.target.value - skuNum });
+    // },
     //更新商品数量
     /* skuId:商品Id,skuNum:商品增加或减少,count商品数量 */
-    async updateAdd(skuId, skuNum) {
-      /*  if(count<=1 && skuNum<0){
+    // async updateAdd(skuId, skuNum) {
+    /*  if(count<=1 && skuNum<0){
         if(window.confirm("您要删除当前商品吗?")){
 
         }
@@ -156,28 +152,81 @@ export default {
         alert("库存有限")
         return
       } */
-      //更新商品
-      await this.getUpdateCart({ skuId, skuNum });
-      //刷新页面,
-      //手动更新页面方法就不需要发请求了
-      // await this.getShopCart();
+    //更新商品
+    // await this.getUpdateCart({ skuId, skuNum });
+    //刷新页面,
+    //手动更新页面方法就不需要发请求了
+    // await this.getShopCart();
+    //},
+
+    //删除商品
+    async deleteCart(skuId) {
+      if (window.confirm('你确认要删除吗?')) {
+        await this.getDeleteCart(skuId);
+        this.getShopCart();
+      }
     },
-    //选中商品
-    // async checkCart(cart) {
-    //   const skuId = cart.skuId;
-    //   const isChecked = cart.isChecked === 1 ? '0' : '1';
-    //   try {
-    //     await this.getCheckCart({
-    //       skuId,
-    //       isChecked,
-    //     });
-    //     await this.$store.dispatch('getCheckCart', { skuId, isChecked });
-    //     // 如果成功了, 重新获取购物车数据显示
-    //     this.getShopCart();
-    //   } catch (error) {
-    //     alert(error);
-    //   }
-    // },
+    //删除所有选中的商品
+    batchDelCart() {
+      const { selectCart } = this;
+      if (selectCart.length === 0) return;
+      if (window.confirm('你确认要删除已选中的购物项吗?')) {
+        selectCart.forEach((cart) => {
+          this.getDeleteCart(cart.skuId);
+          this.getShopCart();
+        });
+      }
+    },
+    //切换选中商品
+    async checkCart(cart) {
+      const isChecked = cart.isChecked === 1 ? 0 : 1;
+      try {
+        //触发actions函数
+        await this.$store.dispatch('getCheckCart', {
+          skuId: cart.skuId,
+          isChecked,
+        });
+        this.getShopCart();
+      } catch (error) {
+        alert(error);
+      }
+    },
+    //切换全选和全不选操作
+    async checkCartAll(e) {
+      const isChecked = e.target.checked * 1;
+      const promises = this.cartList.map((cart) => {
+        return this.$store.dispatch('getCheckCart', {
+          skuId: cart.skuId,
+          isChecked,
+        });
+      });
+      try {
+        await Promise.all(promises);
+        this.getShopCart();
+      } catch (err) {
+        alert(err);
+      }
+    },
+    //修改商品数量
+    async updateAdd(cart, changeNum) {
+      const { skuId } = cart;
+      if (cart.skuNum + changeNum > 0) {
+        await this.$store.dispatch('getUpdateCart', {
+          skuId,
+          skuNum: changeNum,
+        });
+      }
+    },
+    //格式化
+    formatSkuNum(e) {
+      let skuNum = e.target.value.replace(/\D+/g, '');
+      if (skuNum < 1) {
+        skuNum = 1;
+      } else if (skuNum > 10) {
+        skuNum = 10;
+      }
+      e.target.value = skuNum;
+    },
     //点击结算跳转页面
     submit() {
       this.$router.push('/trade');

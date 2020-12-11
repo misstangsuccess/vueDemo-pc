@@ -150,7 +150,7 @@
                     <em>¥</em>
                     <i>6088.00</i>
                   </div>
-                  <div class="operate">
+                  <div class="operate" @click="addCart">
                     <a href="javascript:void(0);">加入购物车</a>
                   </div>
                 </div>

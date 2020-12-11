@@ -12,14 +12,14 @@
           </div>
           <div class="right-info">
             <p class="title">{{cart.skuName}}</p>
-            <p class="attr">{{cart.skuDesc}}</p>
+            <!-- <p class="attr">{{cart.skuDesc}}</p> -->
             <!--   <p class="title">{{skuInfo.skuName}}</p> -->
-            <!-- <p class="attr">颜色：WFZ5099IH/5L钛金釜内胆 数量：{{$route.query.skuNum}}</p> -->
+            <p class="attr">颜色：WFZ5099IH/5L钛金釜内胆 数量：{{$route.query.skuNum}}</p>
           </div>
         </div>
         <div class="right-gocart">
-          <a href="javascript:" class="sui-btn btn-xlarge">查看商品详情</a>
-          <!-- <router-link :to="`/detail/${skuInfo.id}`" class="sui-btn btn-xlarge">查看商品详情</router-link> -->
+         <!--  <a href="javascript:" class="sui-btn btn-xlarge">查看商品详情</a> -->
+          <router-link :to="`/detail/${skuInfo.id}`" class="sui-btn btn-xlarge">查看商品详情</router-link>
           <router-link to="/shopCart">去购物车结算 ></router-link>
         </div>
       </div>
@@ -28,12 +28,12 @@
 </template>
 
 <script>
-// import {mapGetters} from "vuex"
+import {mapGetters} from "vuex"
 export default {
   name: 'AddCartSuccess',
-  /*  computed:{
+   computed:{
       ...mapGetters(['skuInfo'])
-    } */
+    },
   data() {
     return {
       cart: JSON.parse(sessionStorage.getItem('cart') || '{}'),
@@ -51,6 +51,8 @@ export default {
       next('/shopCart');
     });
   },
+
+
 };
 </script>
 

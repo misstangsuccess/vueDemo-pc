@@ -6,6 +6,14 @@ export const reqGetTrade = () => {
     url: "/order/auth/trade"
   })
 }
+//获取订单列表数据
+export const reqGetOrderList = (page, limit) => {
+  console.log(page,limit);
+  return request({
+    method: "GET",
+    url: `order/auth/${page}/${limit}`
+  })
+}
 //提交订单信息
 export const reqsubmitOrder = ({
   tradeNo,
@@ -37,5 +45,12 @@ export const reqGetQRCode = (orderId) => {
   return request({
     method: "GET",
     url: `/payment/weixin/createNative/${orderId}`
+  })
+}
+//获取支付状态
+export const reqGetPayStatus = (orderId) => {
+  return request({
+    method: "GET",
+    url: `/payment/weixin/queryPayStatus/${orderId}`
   })
 }

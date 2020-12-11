@@ -49,7 +49,8 @@
         <!--  <span class="error-msg">错误提示信息</span> -->
       </div>
       <div class="btn">
-        <button @click="submit">完成注册</button>
+        <Button @click="submit">完成注册</Button>
+        <!-- <button @click="submit">完成注册</button> -->
       </div>
     </div>
 
@@ -74,6 +75,7 @@
 <script>
 import { ValidationProvider, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
+import Button from "@comps/Button"
 //内置校验规则:
 extend('required', {
   ...required,
@@ -126,6 +128,7 @@ export default {
   },
   methods: {
     async submit() {
+      console.log(111);
       try {
         //1.收集数据
         const { phone, password, rePassword, code, isAgree } = this.user;
@@ -162,6 +165,7 @@ export default {
   },
   components: {
     ValidationProvider,
+    Button 
   },
 };
 </script>

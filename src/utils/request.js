@@ -15,8 +15,11 @@ localStorage
  */
 //调用函数保存在内存中,请求速度较快
 const getUserTemp = getUserTempId()
+//通过process.env.NODE.ENV来判断是production环境和development环境
+const prefix_url =
+  process.env.NODE_ENV === "development" ? "/" : "http://182.92.128.115/";
 const instance = axios.create({
-  baseURL: "/api",
+  baseURL: `${prefix_url}api`,
   headers: {},
 })
 instance.interceptors.request.use(
